@@ -1,9 +1,9 @@
 
 from slackclient import SlackClient
 import markovify
+import config
 
-slack_token = "xoxp-4108165166-49926913297-458017328102-4b9887000f1c4c144a9fb463651ad305"
-sc = SlackClient(slack_token)
+sc = SlackClient(config.slack_token)
 
 # underwriting: C1K9R6F7U
 # outage-management: C1KN6GBLH
