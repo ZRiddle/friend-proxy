@@ -11,10 +11,10 @@ _GROSS_WORDS_ = ['Slurped', 'Guzzled down', 'Knocked back', 'Gobbled up']
 def build_model(messages, state_size=2):
     # Fit simple Markov Model - add period between
     logging.info("[build_model]")
-    if len(messages) < 50:
-        model = markovify.NewlineText("\n".join(messages), state_size=1)
+    if len(messages) < 30:
+        model = markovify.Text(" ".join(messages), state_size=1)
     else:
-        model = markovify.NewlineText("\n".join(messages), state_size=state_size)
+        model = markovify.Text(" ".join(messages), state_size=state_size)
 
     return model
 
