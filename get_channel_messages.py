@@ -45,7 +45,10 @@ def clean_message(message):
 
 def remove_urls(msg):
     # This will remove links, and some of the @here and @person comments
-    if msg.find("<") >= 0 and msg.find(">") >= 0:
+    if msg.find("<@") >= 0 and msg.find(">") >= 0:
+        # Recursively call this until there are no pairs of <@> left
+        return remove_urls(msg[:msg.find("<@")] + 'someone' + msg[msg.find(">")+1:])
+    elif msg.find("<") >= 0 and msg.find(">") >= 0:
         # Recursively call this until there are no pairs of <> left
         return remove_urls(msg[:msg.find("<")] + msg[msg.find(">")+1:])
     return msg
