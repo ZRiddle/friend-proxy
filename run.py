@@ -13,6 +13,7 @@ from model import learn
 from respond import speak
 import os
 import time
+from cache import CACHE
 
 _BOT_NAME_ = "friendbot"
 
@@ -22,7 +23,19 @@ def ping(sc, channel, *args):
 
 
 def help_me(sc, channel, *args):
-    return 'God helps those who help themselves.'
+    output = 'Current channels\n  #'
+    output += '\n  #'.join([CACHE['channels'][ch]['name'] for ch in CACHE.keys() if ch is not 'channels'])
+    return output
+
+
+def cache_channels(sc):
+    data = sc.api_call('channels.list')
+    channels = {}
+    for ch in data['channels']:
+        channels[ch['id']] = ch
+
+    CACHE['channels'] = channels
+    return
 
 
 def main():
@@ -33,6 +46,7 @@ def main():
 
     # Create the bot instance
     sc = SlackClient(os.environ.get('slack_bot_oauth'))
+    cache_channels(sc)
 
     # Connect to slack
     if not sc.rtm_connect():
