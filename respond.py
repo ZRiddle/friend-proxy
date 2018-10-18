@@ -4,7 +4,7 @@ from model import learn
 from cache import CACHE
 
 
-def speak(sc, channel, target='', target2=None):
+def speak(channel, target='', target2=None):
     if target[:2] == '<#':
         modelkey = target.split('|')[0][2:]
     elif target[:2] == '<@':
@@ -15,7 +15,7 @@ def speak(sc, channel, target='', target2=None):
     else:
         modelkey = channel
     if modelkey not in CACHE:
-        o = learn(sc, channel, target, target2)
+        o = learn(channel, target, target2)
         model = CACHE[modelkey]
         s = model.make_short_sentence(140, tries=100)
         if s is not None:
@@ -30,6 +30,6 @@ def speak(sc, channel, target='', target2=None):
         return ':robot_face: Beep Boop'
 
 
-def yell(sc, channel, target='', target2=None):
+def yell(channel, target='', target2=None):
     # AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-    return speak(sc, channel, target, target2).upper()
+    return speak(channel, target, target2).upper()

@@ -20,11 +20,11 @@ _BOT_NAME_ = "friendbot"
 _SCRABBLE_NAME_ = 'scrabblebot'
 
 
-def ping(sc, channel, *args):
+def ping(channel, *args):
     return 'pong'
 
 
-def help_me(sc, channel, *args):
+def help_me(channel, *args):
     output = 'I can talk like:\n-  <#'
     # output += '>\n  <#'.join([CACHE['channels'][ch]['name'] for ch in CACHE.keys() if ch in CACHE['channels']])
     output += '>\n-  <#'.join([ch for ch in CACHE.keys() if ch in CACHE['channels']])
@@ -85,7 +85,7 @@ def main():
             if message.split()[0] in {_BOT_NAME_, _SCRABBLE_NAME_} and message.split()[1] in commands:
                 logging.info("Command found: " + message)
                 try:
-                    text = commands[message.split()[1]](sc, channel, *message.split()[2:])
+                    text = commands[message.split()[1]](channel, *message.split()[2:])
                 except TypeError:
                     text = 'incorrect number of arguments for command ' + message.split()[1]
                 except Exception as e:

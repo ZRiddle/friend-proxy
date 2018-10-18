@@ -19,7 +19,7 @@ def build_model(messages, state_size=2):
     return model
 
 
-def learn(sc, channel, target='', target2=None):
+def learn(channel, target='', target2=None):
     if target[:2] == '<#':
         messages = get_messages(target.split('|')[0][2:])
         cache_key = target.split('|')[0][2:]
