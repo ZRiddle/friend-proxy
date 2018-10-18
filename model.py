@@ -2,10 +2,10 @@
 from cache import CACHE
 import logging
 import markovify
-from get_channel_messages import get_messages, get_user_messages
+from get_channel_messages import get_messages
 import random
 
-_GROSS_WORDS_ = ['Slurped up', 'Guzzled down', 'Knocked back', 'Gobbled up']
+_GROSS_WORDS_ = ['Slurped', 'Guzzled down', 'Knocked back', 'Gobbled up']
 
 
 def build_model(messages, state_size=2):

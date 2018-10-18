@@ -5,33 +5,29 @@ import os
 max_messages = 5000
 
 
-def get_user_messages(user_id):
-    return
-
-
 def get_messages(channel_id, user_id=None):
-    sc = SlackClient(os.environ.get('slack_oauth'))
-    results = []
-    latest = ''
-    while len(results) < max_messages:
-        data = sc.api_call('channels.history', channel=channel_id, count=1000, latest=latest)
-        if not data['ok']:
-            logging.info('no results')
-            return results
+    with SlackClient(os.environ.get('slack_oauth')) as sc:
+        results = []
+        latest = ''
+        while len(results) < max_messages:
+            data = sc.api_call('channels.history', channel=channel_id, count=1000, latest=latest)
+            if not data['ok']:
+                logging.info('no results')
+                return results
 
-        messages = [m for m in data['messages'] if 'subtype' not in m or m['subtype'] not in ['channel_join', 'channel_leave']]
-        latest = data['messages'][-1]['ts']
-        logging.info('[get_messages] new messages count in channel {}: {}'.format(channel_id, len(messages)))
-        if user_id:
-            messages = [m for m in messages if 'user' in m and m['user'] == user_id]
-            logging.info('[get_messages] new messages for user {}: {}'.format(user_id, len(messages)))
-        for msg in messages:
-            if msg['text']:
-                cleaned = clean_message(msg['text'])
-                results.append(cleaned)
-        if not data['has_more']:
-            break
-    return results
+            messages = [m for m in data['messages'] if 'subtype' not in m or m['subtype'] not in ['channel_join', 'channel_leave']]
+            latest = data['messages'][-1]['ts']
+            logging.info('[get_messages] new messages count in channel {}: {}'.format(channel_id, len(messages)))
+            if user_id:
+                messages = [m for m in messages if 'user' in m and m['user'] == user_id]
+                logging.info('[get_messages] new messages for user {}: {}'.format(user_id, len(messages)))
+            for msg in messages:
+                if msg['text']:
+                    cleaned = clean_message(msg['text'])
+                    results.append(cleaned)
+            if not data['has_more']:
+                break
+        return results
 
 
 def clean_message(message):
