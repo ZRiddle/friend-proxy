@@ -6,7 +6,6 @@ Common Channdels
 - help_environment: C59D5D7A9
 """
 import logging
-
 logging.basicConfig(level=logging.INFO)
 
 from slackclient import SlackClient

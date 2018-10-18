@@ -18,7 +18,7 @@ def speak(sc, channel, target=''):
         if s is not None:
             return o + '\n' + s
         else:
-            return o
+            return o + '\nBeep Boop'
     else:
         model = CACHE[modelkey]
         return model.make_short_sentence(140)
