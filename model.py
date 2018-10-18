@@ -30,6 +30,6 @@ def learn(sc, channel, target='', target2=None):
 
     if messages:
         CACHE[cache_key] = build_model(messages)
-        return 'Ingested {} new messages'.format(len(messages))
+        return 'Slurped {} new messages'.format(len(messages))
     else:
         return 'There was no model trained as there were no messages found.'
