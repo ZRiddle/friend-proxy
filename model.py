@@ -16,15 +16,19 @@ def build_model(messages, state_size=2):
 def learn(sc, channel, target='', target2=None):
     if target[:2] == '<#':
         messages = get_messages(target.split('|')[0][2:])
-        CACHE[target.split('|')[0][2:]] = build_model(messages)
+        cache_key = target.split('|')[0][2:]
     elif target[:2] == '<@':
         if target2 is None:
             ch = channel
         else:
             ch = target2.split('|')[0][2:]
         messages = get_messages(ch, target[2:-1])
-        CACHE[(target, ch)] = build_model(messages)
+        cache_key = (target, ch)
     else:
         messages = get_messages(channel)
-        CACHE[channel] = build_model(messages)
-    return 'Ingested {} new messages'.format(len(messages))
+
+    if messages:
+        CACHE[cache_key] = build_model(messages)
+        return 'Ingested {} new messages'.format(len(messages))
+    else:
+        return 'There was no model trained as there were no messages found.'
