@@ -9,7 +9,7 @@ def get_user_messages(user_id):
     return
 
 
-def get_messages(channel_id):
+def get_messages(channel_id, user_id = None):
     sc = SlackClient(os.environ.get('slack_oauth'))
     results = []
     latest = ''
@@ -19,8 +19,11 @@ def get_messages(channel_id):
             logging.info('no results')
             return results
 
-        logging.info('[get_messages] new messages count: {}'.format(len(data['messages'])))
-        for msg in data['messages']:
+        messages = data['messages']
+        logging.info('[get_messages] new messages count: {}'.format(len(messages)))
+        if user_id:
+            messages = [m for m in messages if m['user'] == user_id]
+        for msg in messages:
             if msg['text']:
                 cleaned = clean_message(msg['text'])
                 results.append(cleaned)
