@@ -17,6 +17,7 @@ import traceback
 from cache import CACHE
 
 _BOT_NAME_ = "friendbot"
+_SCRABBLE_NAME_ = 'scrabblebot'
 
 
 def ping(sc, channel, *args):
@@ -79,7 +80,7 @@ def main():
             if not message or not user:
                 continue
 
-            if message.split()[0] == _BOT_NAME_ and message.split()[1] in commands:
+            if message.split()[0] in {_BOT_NAME_, _SCRABBLE_NAME_} and message.split()[1] in commands:
                 logging.info("Command found: " + message)
                 try:
                     text = commands[message.split()[1]](sc, channel, *message.split()[2:])
@@ -88,6 +89,8 @@ def main():
                 except Exception as e:
                     text = ''.join(traceback.format_exception(type(e), e, e.__traceback__))
                 if text is not None:
+                    if message.split()[0] == _SCRABBLE_NAME_:
+                        text = ''.join([':scrabble-{}:'.format(x) if x in 'abcdefghijklmnopqrstuvwxyz' else x for x in text])
                     logging.info("Sending: " + text)
                     sc.rtm_send_message(channel, text)
 
