@@ -3,6 +3,8 @@ import logging
 from model import learn
 from cache import CACHE
 
+max_sentence_length = 200
+
 
 def speak(channel, target='', target2=None):
     if target[:2] == '<#':
@@ -17,14 +19,14 @@ def speak(channel, target='', target2=None):
     if modelkey not in CACHE:
         o = learn(channel, target, target2)
         model = CACHE[modelkey]
-        s = model.make_short_sentence(140, tries=100)
+        s = model.make_short_sentence(max_sentence_length, tries=100)
         if s is not None:
-            return o + '\n' + s
+            return o + '\n\n' + s
         else:
-            return o + '\n:robot_face: Beep Boop'
+            return o + '\n\n:robot_face: Beep Boop'
     else:
         model = CACHE[modelkey]
-        s = model.make_short_sentence(140, tries=100)
+        s = model.make_short_sentence(max_sentence_length, tries=100)
         if s:
             return s
         return ':robot_face: Beep Boop'
