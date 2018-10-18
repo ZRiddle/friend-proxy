@@ -2,18 +2,25 @@ from slackclient import SlackClient
 import logging
 import os
 
+max_messages = 5000
 
 def get_messages(channel_id):
     sc = SlackClient(os.environ.get('slack_oauth'))
     data = sc.api_call('channels.history', channel=channel_id, count=1000)
     results = []
-    if data['ok'] == 'False':
-        logging.info('no results')
-        return results
-    for msg in data['messages']:
-        if msg['text']:
-            cleaned = clean_message(msg['text'])
-            results.append(cleaned)
+    latest = ''
+    while len(results) < max_messages:
+        data = sc.api_call('channels.history', channel=channel_id, count=1000, latest=latest)
+        if data['ok'] == 'False':
+            logging.info('no results')
+            return results
+        for msg in data['messages']:
+            if msg['text']:
+                cleaned = clean_message(msg['text'])
+                results.append(cleaned)
+            latest = msg['ts']
+        if data['has_more'] == False:
+            break
     return results
 
 
