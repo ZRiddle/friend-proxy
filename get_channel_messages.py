@@ -1,9 +1,10 @@
 from slackclient import SlackClient
 import logging
+import os
+
 
 def get_messages(channel_id):
-    token = '###'
-    sc = SlackClient(token)
+    sc = SlackClient(os.environ.get('slack_oauth'))
     data = sc.api_call('channels.history', channel=channel_id, count=1000)
     results = []
     if data['ok'] == 'False':
@@ -14,6 +15,7 @@ def get_messages(channel_id):
             cleaned = clean_message(msg['text'])
             results.append(cleaned)
     return results
+
 
 def clean_message(message):
     # Cleanup string and add a period to the end of every message

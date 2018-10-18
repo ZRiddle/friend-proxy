@@ -5,13 +5,13 @@ Common Channdels
 - outage-management: C1KN6GBLH
 - help_environment: C59D5D7A9
 """
+
 from slackclient import SlackClient
 from model import learn
 from respond import speak
 import os
 import time
 import logging
-from get_channel_messages import get_messages
 
 _BOT_NAME_ = "friendbot"
 logging.basicConfig(level=logging.INFO)
