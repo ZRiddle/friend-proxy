@@ -15,9 +15,11 @@ def get_messages(channel_id):
     latest = ''
     while len(results) < max_messages:
         data = sc.api_call('channels.history', channel=channel_id, count=1000, latest=latest)
-        if data['ok'] == 'False':
+        if not data['ok']:
             logging.info('no results')
             return results
+
+        logging.info('[get_messages] new messages count: {}'.format(len(data['messages'])))
         for msg in data['messages']:
             if msg['text']:
                 cleaned = clean_message(msg['text'])
