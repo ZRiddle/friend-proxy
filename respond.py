@@ -1,13 +1,20 @@
 #
 import logging
+from model import learn
 from cache import CACHE
 
 
 def speak(sc, channel, target=''):
     if target[:2] == '<#':
-        model = CACHE[target.split('|')[0][2:]]
+        modelkey = target.split('|')[0][2:]
     elif target[:2] == '<@':
-        model = CACHE[target]
+        modelkey = target
     else:
-        model = CACHE[channel]
-    return model.make_short_sentence(140)
+        modelkey = channel
+    if modelkey not in model:
+        o = learn(sc, channel, target)
+        model = CACHE[modelkey]
+        return o + '; ' + model.make_short_sentence(140)
+    else:
+        model = CACHE[modelkey]
+        return model.make_short_sentence(140)
