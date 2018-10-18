@@ -1,6 +1,7 @@
 from slackclient import SlackClient
 import logging
 import os
+import re
 
 max_messages = 5000
 
@@ -43,6 +44,7 @@ def clean_message(message):
 
 def remove_urls(msg):
     # This will remove links, and some of the @here and @person comments
+    msg = re.sub(r'<@\w+>', 'someone', msg)
     if msg.find("<") >= 0 and msg.find(">") >= 0:
         # Recursively call this until there are no pairs of <> left
         return remove_urls(msg[:msg.find("<")] + msg[msg.find(">")+1:])
