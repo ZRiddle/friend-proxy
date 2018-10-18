@@ -90,7 +90,7 @@ def main():
                     text = ''.join(traceback.format_exception(type(e), e, e.__traceback__))
                 if text is not None:
                     if message.split()[0] == _SCRABBLE_NAME_:
-                        text = ''.join([':scrabble-{}:'.format(x) if x in 'abcdefghijklmnopqrstuvwxyz' else x for x in text])
+                        text = ''.join([':scrabble-{}:'.format(x) if x in 'abcdefghijklmnopqrstuvwxyz' else x for x in text.lower()])
                     logging.info("Sending: " + text)
                     sc.rtm_send_message(channel, text)
 
