@@ -20,9 +20,10 @@ def get_messages(channel_id, user_id=None):
             return results
 
         messages = data['messages']
-        logging.info('[get_messages] new messages count: {}'.format(len(messages)))
+        logging.info('[get_messages] new messages count in channel {}: {}'.format(channel_id, len(messages)))
         if user_id:
-            messages = [m for m in messages if m['user'] == user_id]
+            messages = [m for m in messages if 'user' in m and m['user'] == user_id]
+            logging.info('[get_messages] new messages for user {}: {}'.format(user_id, len(messages)))
         for msg in messages:
             if msg['text']:
                 cleaned = clean_message(msg['text'])
