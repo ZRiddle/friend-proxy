@@ -66,7 +66,10 @@ def main():
 
             if message.split()[0] == _BOT_NAME_ and message.split()[1] in commands:
                 logging.info("Command found: " + message)
-                text = commands[message.split()[1]](sc, channel, *message.split()[2:])
+                try:
+                    text = commands[message.split()[1]](sc, channel, *message.split()[2:])
+                except TypeError:
+                    text = 'incorrect number of arguments for command ' + message.split()[1]
                 if text is not None:
                     logging.info("Sending: " + text)
                     sc.rtm_send_message(channel, text)
