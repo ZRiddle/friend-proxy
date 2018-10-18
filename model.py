@@ -26,6 +26,7 @@ def learn(sc, channel, target='', target2=None):
         cache_key = (target, ch)
     else:
         messages = get_messages(channel)
+        cache_key = channel
 
     if messages:
         CACHE[cache_key] = build_model(messages)
