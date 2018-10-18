@@ -19,7 +19,7 @@ def get_messages(channel_id, user_id=None):
             logging.info('no results')
             return results
 
-        messages = [m for m in data['messages'] if 'subtype' in m and m['subtype'] != 'channel_join']
+        messages = [m for m in data['messages'] if 'subtype' not in m or m['subtype'] not in ['channel_join', 'channel_leave']]
         latest = data['messages'][-1]['ts']
         logging.info('[get_messages] new messages count in channel {}: {}'.format(channel_id, len(messages)))
         if user_id:
