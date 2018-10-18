@@ -13,13 +13,17 @@ def build_model(messages, state_size=2):
     return model
 
 
-def learn(sc, channel, target=''):
+def learn(sc, channel, target='', target2=None):
     if target[:2] == '<#':
         messages = get_messages(target.split('|')[0][2:])
         CACHE[target.split('|')[0][2:]] = build_model(messages)
     elif target[:2] == '<@':
-        messages = get_messages(channel, target[2:-1])
-        CACHE[target] = build_model(messages)
+        if target2 is None:
+            ch = channel
+        else:
+            ch = target2.split('|')[0][2:]
+        messages = get_messages(ch, target[2:-1])
+        CACHE[(target, ch)] = build_model(messages)
     else:
         messages = get_messages(channel)
         CACHE[channel] = build_model(messages)
