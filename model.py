@@ -8,7 +8,10 @@ from get_channel_messages import get_messages, get_user_messages
 def build_model(messages, state_size=2):
     # Fit simple Markov Model - add period between
     logging.info("[build_model]")
-    model = markovify.Text(" ".join(messages), state_size=state_size)
+    if len(messages) < 50:
+        model = markovify.NewlineText("\n".join(messages), state_size=1)
+    else:
+        model = markovify.NewlineText("\n".join(messages), state_size=state_size)
 
     return model
 
