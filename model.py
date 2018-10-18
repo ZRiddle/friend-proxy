@@ -1,5 +1,5 @@
 #
-from run import CACHE
+from cache import CACHE
 import logging
 import markovify
 from get_channel_messages import get_messages

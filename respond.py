@@ -1,6 +1,6 @@
 #
 import logging
-from run import CACHE
+from cache import CACHE
 
 
 def speak(sc, channel, *args):

@@ -5,18 +5,17 @@ Common Channdels
 - outage-management: C1KN6GBLH
 - help_environment: C59D5D7A9
 """
+import logging
 
-CACHE = {}  # Initialize model cache
+logging.basicConfig(level=logging.INFO)
 
 from slackclient import SlackClient
 from model import learn
 from respond import speak
 import os
 import time
-import logging
 
 _BOT_NAME_ = "friendbot"
-logging.basicConfig(level=logging.INFO)
 
 
 def ping(sc, channel, *args):
@@ -66,9 +65,11 @@ def main():
                 continue
 
             if message.split()[0] == _BOT_NAME_ and message.split()[1] in commands:
+                logging.info("Command found: " + message)
                 text = commands[message.split()[1]](sc, channel, *message.split()[2:])
                 if text is not None:
-                    sc.send_message(text)
+                    logging.info("Sending: " + text)
+                    sc.rtm_send_message(channel, text)
 
         # Sleep for a second
         time.sleep(1)
