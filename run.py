@@ -88,7 +88,7 @@ def main():
                     text = ''.join(traceback.format_exception(type(e), e, e.__traceback__))
                 if text is not None:
                     logging.info("Sending: " + text)
-                    sc.rtm_send_message(channel, text)
+                    sc.rtm_send_message(channel, text.upper())
 
         # Sleep for a second
         time.sleep(1)
