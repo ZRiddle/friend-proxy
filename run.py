@@ -25,8 +25,9 @@ def ping(sc, channel, *args):
 
 
 def help_me(sc, channel, *args):
-    output = 'Current channels\n  #'
-    output += '\n  #'.join([CACHE['channels'][ch]['name'] for ch in CACHE.keys() if ch in CACHE['channels']])
+    output = 'Current channels\n  <#'
+    output += '>\n  <#'.join([CACHE['channels'][ch]['name'] for ch in CACHE.keys() if ch in CACHE['channels']])
+    output += '>'
     return output
 
 
