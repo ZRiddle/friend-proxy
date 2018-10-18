@@ -21,4 +21,7 @@ def speak(sc, channel, target=''):
             return o + '\nBeep Boop'
     else:
         model = CACHE[modelkey]
-        return model.make_short_sentence(140)
+        s = model.make_short_sentence(140)
+        if s:
+            return s
+        return 'Beep Boop'
