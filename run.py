@@ -12,6 +12,7 @@ import time
 import logging
 
 _BOT_NAME_ = "friendbot"
+logging.basicConfig(level=logging.INFO)
 
 
 def clean_message(message):
@@ -71,6 +72,8 @@ def main():
     """
     Startup logic and the main application loop to monitor Slack events.
     """
+    print("Starting up bot!")
+    logging.info("Starting up bot!")
 
     # Build model on channel
     model = build_model_from_channel()
