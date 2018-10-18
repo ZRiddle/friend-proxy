@@ -20,6 +20,7 @@ def get_messages(channel_id, user_id=None):
             return results
 
         messages = data['messages']
+        latest = messages[-1]['ts']
         logging.info('[get_messages] new messages count in channel {}: {}'.format(channel_id, len(messages)))
         if user_id:
             messages = [m for m in messages if 'user' in m and m['user'] == user_id]
@@ -28,7 +29,6 @@ def get_messages(channel_id, user_id=None):
             if msg['text']:
                 cleaned = clean_message(msg['text'])
                 results.append(cleaned)
-            latest = msg['ts']
         if not data['has_more']:
             break
     return results
