@@ -14,7 +14,11 @@ def speak(sc, channel, target=''):
     if modelkey not in CACHE:
         o = learn(sc, channel, target)
         model = CACHE[modelkey]
-        return o + '; ' + model.make_short_sentence(140)
+        s = model.make_short_sentence(140)
+        if s is not None:
+            return o + '\n' + s
+        else:
+            return o
     else:
         model = CACHE[modelkey]
         return model.make_short_sentence(140)
