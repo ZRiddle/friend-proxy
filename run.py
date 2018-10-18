@@ -84,7 +84,7 @@ def main():
                 except TypeError:
                     text = 'incorrect number of arguments for command ' + message.split()[1]
                 except Exception as e:
-                    text = 'exception: ' + str(e)
+                    text = ''.join(traceback.format_exception(type(e), e, e.__traceback__))
                 if text is not None:
                     logging.info("Sending: " + text)
                     sc.rtm_send_message(channel, text)
