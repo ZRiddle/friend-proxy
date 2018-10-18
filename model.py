@@ -3,6 +3,9 @@ from cache import CACHE
 import logging
 import markovify
 from get_channel_messages import get_messages, get_user_messages
+import random
+
+_GROSS_WORDS_ = ['Slurped up', 'Guzzled down', 'Knocked back', 'Gobbled up']
 
 
 def build_model(messages, state_size=2):
@@ -33,6 +36,6 @@ def learn(sc, channel, target='', target2=None):
 
     if messages:
         CACHE[cache_key] = build_model(messages)
-        return 'Slurped {} new messages'.format(len(messages))
+        return random.choice(_GROSS_WORDS_) + ' {} new messages'.format(len(messages))
     else:
         return 'There was no model trained as there were no messages found.'
