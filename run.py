@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 from slackclient import SlackClient
 from model import learn
-from respond import speak
+from respond import speak, yell
 import os
 import time
 import traceback
@@ -59,7 +59,8 @@ def main():
         'speak': speak,
         'impersonate': None,
         'learn': learn,
-        'help': help_me
+        'help': help_me,
+        'yell': yell
     }
 
     # Where the magic happens
@@ -88,7 +89,7 @@ def main():
                     text = ''.join(traceback.format_exception(type(e), e, e.__traceback__))
                 if text is not None:
                     logging.info("Sending: " + text)
-                    sc.rtm_send_message(channel, text.upper())
+                    sc.rtm_send_message(channel, text)
 
         # Sleep for a second
         time.sleep(1)

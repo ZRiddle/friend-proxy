@@ -21,10 +21,15 @@ def speak(sc, channel, target='', target2=None):
         if s is not None:
             return o + '\n' + s
         else:
-            return o + '\nBeep Boop'
+            return o + '\n:robot_face: Beep Boop'
     else:
         model = CACHE[modelkey]
         s = model.make_short_sentence(140, tries=100)
         if s:
             return s
-        return 'Beep Boop'
+        return ':robot_face: Beep Boop'
+
+
+def yell(sc, channel, target='', target2=None):
+    # AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+    return speak(sc, channel, target, target2).upper()
