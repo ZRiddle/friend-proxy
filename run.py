@@ -6,6 +6,8 @@ Common Channdels
 - help_environment: C59D5D7A9
 """
 
+CACHE = {}  # Initialize model cache
+
 from slackclient import SlackClient
 from model import learn
 from respond import speak
@@ -15,8 +17,6 @@ import logging
 
 _BOT_NAME_ = "friendbot"
 logging.basicConfig(level=logging.INFO)
-
-CACHE = {}  # Initialize model cache
 
 
 def ping(sc, channel, *args):
