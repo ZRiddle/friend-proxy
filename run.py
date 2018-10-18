@@ -82,7 +82,7 @@ def main():
             if not message or not user:
                 continue
 
-            if message.split()[0] in {_BOT_NAME_, _SCRABBLE_NAME_} and message.split()[1] in commands:
+            if message.split()[0] in {_BOT_NAME_, _SCRABBLE_NAME_} and len(message.split()) > 1 and message.split()[1] in commands:
                 logging.info("Command found: " + message)
                 try:
                     text = commands[message.split()[1]](channel, *message.split()[2:])
