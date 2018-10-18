@@ -9,7 +9,7 @@ def get_user_messages(user_id):
     return
 
 
-def get_messages(channel_id, user_id = None):
+def get_messages(channel_id, user_id=None):
     sc = SlackClient(os.environ.get('slack_oauth'))
     results = []
     latest = ''
