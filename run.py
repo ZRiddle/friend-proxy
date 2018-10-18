@@ -6,7 +6,8 @@ Common Channdels
 - help_environment: C59D5D7A9
 """
 from slackclient import SlackClient
-import markovify
+from model import learn
+from respond import speak
 import os
 import time
 import logging
@@ -15,45 +16,15 @@ from get_channel_messages import get_messages
 _BOT_NAME_ = "friendbot"
 logging.basicConfig(level=logging.INFO)
 
-
-def get_messages_from_channel(channel):
-    """TODO - this function feels too messy"""
-    logging.info("[get_messages_from_channel] " + channel)
-    sc = SlackClient(os.environ.get('slack_oauth'))
-
-    days_of_messages = 20
-    intervals_of_days = 40
-    today = time.time()
-
-    data = []
-    for x in range(intervals_of_days):
-        data.append(sc.api_call('channels.history', channel=channel, count=300,
-                                oldest=(today - (x + 1) * days_of_messages * 60 * 60 * 24),
-                                latest=(today - x * days_of_messages * 60 * 60 * 24)))
-        time.sleep(.2)
-
-    messages = []
-    for day in data:
-        if 'messages' in day:
-            for msg in day['messages']:
-                if msg['text']:
-                    messages.append(msg['text'])
-
-    logging.info("[get_messages_from_channel] scraped {} messages".format(len(messages)))
-    return messages
+CACHE = {}  # Initialize model cache
 
 
-def build_model_from_channel(channel='C1K9R6F7U'):
-    # Grab messages
-    messages = get_messages_from_channel(channel=channel)
+def ping(sc, channel, *args):
+    return 'pong'
 
-    # Fit simple Markov Model - add period between
-    cleaned_messages = [clean_message(msg) for msg in messages]
 
-    logging.info("[build_model_from_channel] " + channel)
-    model = markovify.Text(" ".join(cleaned_messages), state_size=2)
-
-    return model
+def help_me(sc, channel, *args):
+    return 'God helps those who help themselves.'
 
 
 def main():
@@ -61,9 +32,6 @@ def main():
     Startup logic and the main application loop to monitor Slack events.
     """
     logging.info("[main] Starting up bot!")
-
-    # Build model on channel
-    model = build_model_from_channel()
 
     # Create the bot instance
     sc = SlackClient(os.environ.get('slack_bot_oauth'))
@@ -73,6 +41,14 @@ def main():
         raise Exception("Couldn't connect to slack.")
 
     logging.info("[main] Bot is listening")
+    commands = {
+        'ping': ping,
+        'speak': speak,
+        'impersonate': None,
+        'learn': learn,
+        'help': help_me
+    }
+
     # Where the magic happens
     while True:
         # Examine latest events
@@ -89,21 +65,10 @@ def main():
             if not message or not user:
                 continue
 
-            ######
-            # Commands we're listening for.
-            ######
-
-            if _BOT_NAME_ + " ping" in message.lower():
-                logging.info("[bot reply] - sending pong")
-                sc.rtm_send_message(channel, "pong")
-
-            if _BOT_NAME_ + " speak" in message.lower():
-                logging.info("[bot reply] - generating message")
-                sc.rtm_send_message(channel, model.make_short_sentence(140))
-
-            if _BOT_NAME_ + " help" in message.lower():
-                logging.info("[bot reply] - helping")
-                sc.rtm_send_message(channel, "God helps those who help themselves")
+            if message.split()[0] == _BOT_NAME_ and message.split()[1] in commands:
+                text = commands[message.split()[1]](sc, channel, *message.split()[2:])
+                if text is not None:
+                    sc.send_message(text)
 
         # Sleep for a second
         time.sleep(1)
