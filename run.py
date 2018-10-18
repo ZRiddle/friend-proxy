@@ -34,35 +34,39 @@ def remove_urls(msg):
 
 def get_messages_from_channel(channel):
     """TODO - this function feels too messy"""
-    logging.info("[get_messages_from_channel] - " + channel)
+    logging.info("[get_messages_from_channel] " + channel)
     sc = SlackClient(os.environ.get('slack_oauth'))
 
-    days_of_messages = 30
-    intervals_of_days = 30
+    days_of_messages = 20
+    intervals_of_days = 40
     today = time.time()
 
     data = []
     for x in range(intervals_of_days):
-        data.append(sc.api_call('channels.history', channel=channel, count=1000,
+        data.append(sc.api_call('channels.history', channel=channel, count=300,
                                 oldest=(today - (x + 1) * days_of_messages * 60 * 60 * 24),
                                 latest=(today - x * days_of_messages * 60 * 60 * 24)))
         time.sleep(.2)
 
     messages = []
     for day in data:
-        for msg in day['messages']:
-            if msg['text']:
-                messages.append(msg['text'])
+        if 'messages' in day:
+            for msg in day['messages']:
+                if msg['text']:
+                    messages.append(msg['text'])
+
+    logging.info("[get_messages_from_channel] scraped {} messages".format(len(messages)))
     return messages
 
 
 def build_model_from_channel(channel='C1K9R6F7U'):
     # Grab messages
-    logging.info("[build_model_from_channel] - " + channel)
     messages = get_messages_from_channel(channel=channel)
 
     # Fit simple Markov Model - add period between
     cleaned_messages = [clean_message(msg) for msg in messages]
+
+    logging.info("[build_model_from_channel] " + channel)
     model = markovify.Text(" ".join(cleaned_messages), state_size=2)
 
     return model
@@ -72,8 +76,7 @@ def main():
     """
     Startup logic and the main application loop to monitor Slack events.
     """
-    print("Starting up bot!")
-    logging.info("Starting up bot!")
+    logging.info("[main] Starting up bot!")
 
     # Build model on channel
     model = build_model_from_channel()
@@ -85,6 +88,7 @@ def main():
     if not sc.rtm_connect():
         raise Exception("Couldn't connect to slack.")
 
+    logging.info("[main] Bot is listening")
     # Where the magic happens
     while True:
         # Examine latest events
