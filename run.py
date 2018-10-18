@@ -13,6 +13,7 @@ from model import learn
 from respond import speak
 import os
 import time
+import traceback
 from cache import CACHE
 
 _BOT_NAME_ = "friendbot"
