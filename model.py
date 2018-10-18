@@ -18,7 +18,7 @@ def learn(sc, channel, target=''):
         messages = get_messages(target.split('|')[0][2:])
         CACHE[target.split('|')[0][2:]] = build_model(messages)
     elif target[:2] == '<@':
-        messages = get_user_messages(target.split('|')[0][2:])
+        messages = get_messages(channel, target.split('|')[0][2:])
         CACHE[target] = build_model(messages)
     else:
         messages = get_messages(channel)
