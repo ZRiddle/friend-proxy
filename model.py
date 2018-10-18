@@ -16,7 +16,7 @@ def build_model(messages, state_size=2):
 def learn(sc, channel, target=None):
     if target[:2] == '<#':
         messages = get_messages(target.split('|')[0][2:])
-        CACHE[messages.split('|')[0][2:]] = build_model(messages)
+        CACHE[target.split('|')[0][2:]] = build_model(messages)
     elif target[:2] == '<@':
         messages = get_user_messages(target.split('|')[0][2:])
         CACHE[target] = build_model(messages)
